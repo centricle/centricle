@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+.card {
+  @apply bg-white border border-slate-200 rounded-lg shadow-sm p-6;
+}
+
+.card-header {
+  @apply mb-4 pb-4 border-b border-slate-200;
+}
+
+.card-title {
+  @apply text-lg font-semibold leading-tight text-slate-900;
+}
+
+.card-description {
+  @apply text-sm text-slate-600 mt-2;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md border transition-all duration-150 cursor-pointer;
+}
+
+.btn-primary {
+  @apply bg-slate-900 text-white border-transparent hover:opacity-90;
+}
+
+.section-spacing {
+  @apply py-16;
+}
+
+.hero-spacing {
+  @apply py-24;
+}
