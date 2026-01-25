@@ -29,7 +29,7 @@ body {
 }
 
 .btn-primary {
-    @apply bg-accent text-white border-transparent hover:bg-accent/90;
+    @apply bg-accent text-dark border-transparent hover:bg-accent/90 font-semibold;
 }
 
 /* Form inputs */
