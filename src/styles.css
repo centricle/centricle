@@ -57,12 +57,12 @@ body {
 }
 
 .status-ref {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-700 text-slate-400;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-700 text-slate-300;
 }
 
 /* Tech pills */
 .tech-pill {
-    @apply inline-flex items-center px-2 py-1 rounded text-xs font-mono bg-slate-700 text-slate-400;
+    @apply inline-flex items-center px-2 py-1 rounded text-xs font-mono bg-slate-700 text-slate-300;
 }
 
 /* Tip callout */
