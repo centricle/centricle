@@ -89,7 +89,8 @@
     </footer>
 
     <script>
-        // Initialize Stripe with your publishable key
+        // Stripe PUBLISHABLE key - intentionally client-side (test mode)
+        // This is NOT a secret key. Publishable keys are designed to be embedded in client code.
         const stripe = Stripe('pk_test_51ReRbD2n3msnFGGQi9SVVWxXSKFfW8WWyrMAq948YjH6KdpTyX25vbj2hZUVLo7q5cS0dSuaYBKxlYyIZ8OGOlui00LTkInoYP');
         const elements = stripe.elements({
             mode: 'payment',

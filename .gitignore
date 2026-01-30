@@ -3,4 +3,5 @@ dist/
 .DS_Store
 *.log
 .env
-logo-preview.htmlCLAUDE.md
+logo-preview.html
+CLAUDE.md
