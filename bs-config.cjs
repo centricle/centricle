@@ -1,0 +1,17 @@
+module.exports = {
+  port: 7001,
+  server: {
+    baseDir: 'dist',
+    serveStaticOptions: {
+      extensions: ['html']
+    }
+  },
+  files: [
+    'dist/**/*.css',
+    'dist/**/*.html'
+  ],
+  watchEvents: ['change'],
+  notify: false,
+  open: false,
+  ui: false
+};

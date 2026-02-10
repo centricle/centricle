@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+logo-preview.html
+CLAUDE.md
+HANDOFF.md
+ROADMAP.md
+v0-HANDOFF.md
+centricle-*.png
+constellation-*.png
+dna-*.png
+*.zip
+lighthouse-report.*
