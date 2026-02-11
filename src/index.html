@@ -50,19 +50,19 @@
                 <img src="/avatar.jpg" alt="" class="w-8 h-8 rounded-full" />
                 Kevin Smith
             </a>
-            <ul class="flex gap-6">
+            <ul class="hidden md:flex gap-6">
                 <li><a href="#projects" class="text-slate-400 hover:text-slate-100 transition-colors">Projects</a></li>
                 <li><a href="#contact" class="text-slate-400 hover:text-slate-100 transition-colors">Contact</a></li>
             </ul>
         </div>
     </nav>
 
-    <canvas id="bg-canvas" class="pointer-events-none" style="position:absolute;top:0;left:0;width:100%;z-index:0;" aria-hidden="true"></canvas>
+    <canvas id="bg-canvas" class="pointer-events-none hidden md:block" style="position:absolute;top:0;left:0;width:100%;z-index:0;" aria-hidden="true"></canvas>
     <div id="page-wrapper" class="relative" style="z-index:1;">
     <main class="relative">
     <!-- Hero -->
     <section class="min-h-screen flex items-center pt-20">
-        <div class="max-w-6xl mx-auto px-6 py-24">
+        <div class="max-w-6xl mx-auto px-6 md:py-24">
             <h1 class="text-5xl md:text-6xl font-bold text-slate-100 mb-6 leading-tight">
                 24 years. Full stack.<br class="hidden md:block" />
                 <span class="text-slate-400">Still shipping.</span>
@@ -593,6 +593,7 @@
             // --- Config ---
             const mode = new URLSearchParams(location.search).get('bg') || 'constellation';
             const isMobile = window.innerWidth < 768;
+            if (isMobile) return;
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             let animationId;
