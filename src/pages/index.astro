@@ -7,7 +7,7 @@ const structuredData = JSON.stringify({
   "name": "Kevin Smith",
   "url": "https://centricle.com",
   "jobTitle": "Senior Software Engineer",
-  "description": "Senior software engineer specializing in Django, Wagtail, and Python.",
+  "description": "Senior software engineer with 24 years full-stack experience. Django, Python, JavaScript, modern web.",
   "email": "ksmith@centricle.com",
   "address": {
     "@type": "PostalAddress",
@@ -19,13 +19,13 @@ const structuredData = JSON.stringify({
     "https://github.com/centricle",
     "https://linkedin.com/in/thekevinsmith"
   ],
-  "knowsAbout": ["Python", "Django", "Wagtail", "WordPress", "JavaScript", "Web Development"]
+  "knowsAbout": ["Python", "Django", "Wagtail", "WordPress", "JavaScript", "Supabase", "Vite", "Web Development"]
 });
 ---
 
 <BaseLayout
-  title="Kevin Smith – Senior Software Engineer | Django, Wagtail, Python"
-  description="Kevin Smith - Senior software engineer specializing in Django, Wagtail, and Python. 24 years in, still shipping."
+  title="Kevin Smith – Senior Software Engineer | 24 Years Full Stack"
+  description="Kevin Smith - Senior software engineer. 24 years full stack, still shipping. Django, Python, JavaScript, modern web."
   structuredData={structuredData}
 >
   <canvas slot="before-nav" id="bg-canvas" class="pointer-events-none hidden md:block" style="position:absolute;top:0;left:0;width:100%;z-index:0;" aria-hidden="true"></canvas>
@@ -38,7 +38,7 @@ const structuredData = JSON.stringify({
         <span class="text-slate-400">Still shipping.</span>
       </h1>
       <p class="text-xl text-slate-400 mb-6 max-w-2xl">
-        I ship products, not status updates. Django/WordPress. Available.
+        I ship products, not status updates. Available.
       </p>
       <div class="flex flex-wrap gap-3 mb-8">
         <span class="stat-badge"><svg class="w-4 h-4 inline-block -mt-0.5 mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>Ocean Pines, MD</span>
@@ -147,16 +147,20 @@ const structuredData = JSON.stringify({
               </div>
             </a>
 
-            <div class="card card-building relative overflow-hidden">
-              <span class="ribbon-building">BUILDING</span>
-              <h4 class="text-xl font-semibold text-slate-100 mb-3">whoami.fyi</h4>
-              <p class="text-slate-400 text-sm mb-4">Identity analysis tool. Paste any text and discover what it reveals about the author.</p>
+            <a href="https://whoami.fyi" target="_blank" rel="noopener" class="card card-link group">
+              <img src="/screenshots/whoami.webp" alt="whoami.fyi search collision detection tool" width="800" height="545" loading="lazy" class="w-full h-40 object-cover object-top rounded-lg mb-4" />
+              <div class="flex items-start justify-between mb-3">
+                <h4 class="text-xl font-semibold text-slate-100 group-hover:text-teal-400 transition-colors">whoami.fyi</h4>
+                <span class="status-active">Active</span>
+              </div>
+              <p class="text-slate-400 text-sm mb-4">Search collision detector. See what recruiters find when they Google your name. Free preview, $3 AI audit.</p>
               <div class="flex flex-wrap gap-2">
                 <span class="tech-pill">Claude API</span>
-                <span class="tech-pill">Astro</span>
-                <span class="tech-pill">TypeScript</span>
+                <span class="tech-pill">Stripe</span>
+                <span class="tech-pill">Serper</span>
+                <span class="tech-pill">Vite</span>
               </div>
-            </div>
+            </a>
 
             <a href="https://doomscrolling.us" target="_blank" rel="noopener" class="card card-link group">
               <img src="/screenshots/doomscrolling.webp" alt="Doomscrolling anonymous text sharing interface" width="800" height="545" loading="lazy" class="w-full h-40 object-cover object-top rounded-lg mb-4" />
@@ -458,6 +462,9 @@ const structuredData = JSON.stringify({
       <h2 class="text-3xl font-bold text-slate-100 mb-8">Background</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
+          <p class="text-slate-400 mb-6">
+            Every project in this portfolio started the same way — I needed something, it didn't exist (or existed badly), and I built it. Not business plans. Scratched itches.
+          </p>
           <p class="text-slate-400 mb-6">
             I've been building for the web since tables were for layout. Along the way: a FEMA contract building an accessibility-focused GIS application, 17 years at Motley Fool, and marketing engineering at Muck Rack.
           </p>
