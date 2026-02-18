@@ -8,9 +8,14 @@ Django, Wagtail, Python. WordPress when it's the right tool. Available for contr
 
 | | |
 |---|---|
+| [iron.fyi](https://iron.fyi) | Vintage vehicles reference guide |
+| [boots.fyi](https://boots.fyi) | Heritage footwear guide |
 | [batteries.fyi](https://batteries.fyi) | Consumer battery specs database |
 | [cables.fyi](https://cables.fyi) | Cable and connector reference |
 | [fasteners.fyi](https://fasteners.fyi) | Fastener specs and standards |
+| [mileweave.us](https://mileweave.us) | Road trip planner |
+| [picweave.us](https://picweave.us) | Photo timeline merger |
+| [yappyhour.us](https://yappyhour.us) | Dog park event coordination |
 | [Liberator](https://chromewebstore.google.com/detail/liberator/fhmmgchnebgmlplmpilgjakljjgookng) | Chrome extension — re-enable paste, kill sticky headers |
 | [Nuke](https://chromewebstore.google.com/detail/nuke/jffpcdpgmjgdmnkihichojlnldpmafae) | Chrome extension — one-click cache and cookie clearing |
 | [RTFM](https://github.com/centricle/rtfm) | Local documentation search CLI |
