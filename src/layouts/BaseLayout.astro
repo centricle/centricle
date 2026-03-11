@@ -63,8 +63,50 @@ const ogImageURL = new URL(ogImage, 'https://centricle.com');
           <li><a href="/#projects" class="text-slate-400 hover:text-slate-100 transition-colors">Projects</a></li>
           <li><a href="/#contact" class="text-slate-400 hover:text-slate-100 transition-colors">Contact</a></li>
         </ul>
+        <button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-slate-100 transition-colors" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          <svg id="menu-icon-close" class="hidden" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden border-t border-slate-700/50 bg-slate-900/95 backdrop-blur-sm">
+        <ul class="max-w-6xl mx-auto px-6 py-4 space-y-3">
+          <li><a href="/#projects" class="block text-slate-400 hover:text-slate-100 transition-colors">Projects</a></li>
+          <li><a href="/#contact" class="block text-slate-400 hover:text-slate-100 transition-colors">Contact</a></li>
+        </ul>
       </div>
     </nav>
+
+    <script is:inline>
+      (function() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        function toggle(open) {
+          const isOpen = typeof open === 'boolean' ? open : menu.classList.contains('hidden');
+          menu.classList.toggle('hidden', !isOpen);
+          iconOpen.classList.toggle('hidden', isOpen);
+          iconClose.classList.toggle('hidden', !isOpen);
+          btn.setAttribute('aria-expanded', isOpen);
+          btn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+        }
+
+        btn.addEventListener('click', function() { toggle(); });
+
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && !menu.classList.contains('hidden')) toggle(false);
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!menu.classList.contains('hidden') && !btn.contains(e.target) && !menu.contains(e.target)) toggle(false);
+        });
+
+        menu.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() { toggle(false); });
+        });
+      })();
+    </script>
 
     <slot name="before-nav" />
 
