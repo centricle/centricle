@@ -30,7 +30,7 @@ function initCanvas() {
         { r: 200, g: 150, b: 80, a: 0.23 },
     ];
     const nebulaParticles = [];
-    const maxNebulaParticles = isMobile ? 30 : 60;
+    const maxNebulaParticles = isMobile ? 15 : 30;
 
     const createNebulaParticle = () => {
         const w = window.innerWidth;
@@ -82,7 +82,7 @@ function initCanvas() {
     const initStars = () => {
         const w = window.innerWidth;
         const h = contentHeight;
-        let starCount = Math.floor((w * h) / 3500);
+        let starCount = Math.min(600, Math.floor((w * h) / 3500));
         if (isMobile) starCount = Math.floor(starCount / 2);
         stars = [];
         connections = [];
@@ -313,14 +313,12 @@ function initCanvas() {
             const twinkle = Math.sin(time * 0.001 * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
             const alpha = star.brightness * twinkle * 0.6;
 
-            // Node glow
+            // Node glow (simple circle, no per-frame gradient)
             if (star.isNode) {
-                const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 4);
-                glow.addColorStop(0, 'rgba(45,212,191,' + (alpha * 0.2) + ')');
-                glow.addColorStop(0.5, 'rgba(45,212,191,' + (alpha * 0.05) + ')');
-                glow.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = glow;
-                ctx.fillRect(star.x - star.size * 4, star.y - star.size * 4, star.size * 8, star.size * 8);
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(45,212,191,' + (alpha * 0.08) + ')';
+                ctx.fill();
             }
 
             ctx.beginPath();
@@ -474,9 +472,9 @@ function initCanvas() {
     // --- Draw dispatcher ---
     const drawFrame = mode === 'constellation' ? drawConstellation : drawDNA;
 
-    // --- Animation loop ---
+    // --- Animation loop (30fps cap — ambient animation doesn't need 60) ---
     const animate = (time) => {
-        if (isMobile && time - lastFrame < 33) {
+        if (time - lastFrame < 33) {
             animationId = requestAnimationFrame(animate);
             return;
         }
