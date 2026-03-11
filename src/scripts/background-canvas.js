@@ -1,4 +1,4 @@
-// Full-page background canvas — constellation (default) or DNA mode (?bg=dna)
+// Fixed viewport background canvas — constellation (default) or DNA mode (?bg=dna)
 function initCanvas() {
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
@@ -16,12 +16,9 @@ function initCanvas() {
     let connections = [];
     let dnaParticles = [];
     let lastFrame = 0;
-    let contentHeight = 0;
     let nebulaTime = 0;
 
-    const wrapper = document.getElementById('page-wrapper');
-
-    // --- Nebula particle system (matches production) ---
+    // --- Nebula particle system ---
     const nebulaColors = [
         { r: 180, g: 60, b: 40, a: 0.35 },
         { r: 220, g: 100, b: 50, a: 0.28 },
@@ -30,11 +27,11 @@ function initCanvas() {
         { r: 200, g: 150, b: 80, a: 0.23 },
     ];
     const nebulaParticles = [];
-    const maxNebulaParticles = isMobile ? 15 : 30;
+    const maxNebulaParticles = 30;
 
     const createNebulaParticle = () => {
         const w = window.innerWidth;
-        const vh = window.innerHeight;
+        const h = window.innerHeight;
         const angle = Math.random() * Math.PI * 0.5 + Math.PI;
         const speed = Math.random() * 0.4 + 0.15;
         const color = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
@@ -50,28 +47,24 @@ function initCanvas() {
         };
     };
 
-    // Initialize nebula particles spread across hero area
+    // Initialize nebula particles spread across viewport
     for (let i = 0; i < maxNebulaParticles; i++) {
         const p = createNebulaParticle();
         const w = window.innerWidth;
-        const vh = window.innerHeight;
+        const h = window.innerHeight;
         p.x = w * 0.5 + Math.random() * w * 0.6;
-        p.y = Math.random() * vh * 0.6;
+        p.y = Math.random() * h * 0.6;
         p.life = Math.random() * p.maxLife;
         nebulaParticles.push(p);
     }
 
-    // --- Canvas sizing (DPR-aware) ---
+    // --- Canvas sizing (DPR-aware, viewport only) ---
     const resize = () => {
         const dpr = window.devicePixelRatio || 1;
         const w = window.innerWidth;
-        // Canvas is outside the wrapper, so wrapper.offsetHeight is pure content
-        contentHeight = wrapper.offsetHeight;
-        const h = contentHeight;
+        const h = window.innerHeight;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
         if (mode === 'constellation') initStars();
@@ -81,9 +74,8 @@ function initCanvas() {
     // --- Constellation: star/connection generation ---
     const initStars = () => {
         const w = window.innerWidth;
-        const h = contentHeight;
-        let starCount = Math.min(600, Math.floor((w * h) / 3500));
-        if (isMobile) starCount = Math.floor(starCount / 2);
+        const h = window.innerHeight;
+        let starCount = Math.min(400, Math.floor((w * h) / 3500));
         stars = [];
         connections = [];
 
@@ -140,10 +132,9 @@ function initCanvas() {
 
     // --- DNA: particle generation ---
     const initDNA = () => {
-        const h = contentHeight;
+        const h = window.innerHeight;
         dnaParticles = [];
         let count = Math.floor(h / 8);
-        if (isMobile) count = Math.floor(count / 2);
         for (let i = 0; i < count; i++) {
             dnaParticles.push({
                 angle: (i / count) * Math.PI * 2 * 20 + Math.random() * 0.3,
@@ -158,11 +149,11 @@ function initCanvas() {
 
     // --- DNA: helix x position ---
     const getHelixX = (y, time, strand, w) => {
-        const scrollH = contentHeight;
+        const h = window.innerHeight;
         const centerX = w * 0.5;
         const breathe = Math.sin(time * 0.0004) * 0.05 + 1;
         const baseAmplitude = w * 0.08;
-        const yFactor = y / scrollH;
+        const yFactor = y / h;
         const amplitude = baseAmplitude * (0.8 + yFactor * 0.4) * breathe;
         const frequency = (2 * Math.PI) / 350;
         const phase = strand === 0 ? 0 : Math.PI;
@@ -170,10 +161,10 @@ function initCanvas() {
         return centerX + Math.sin(y * frequency + phase + timeShift) * amplitude;
     };
 
-    // --- Shared: nebula hero drawing (production-faithful particle system) ---
+    // --- Shared: nebula drawing ---
     const drawNebula = (time) => {
         const w = window.innerWidth;
-        const vh = window.innerHeight;
+        const h = window.innerHeight;
 
         const pulse = Math.sin(nebulaTime * 0.00065) * 0.03 + 0.97;
         const slowPulse = Math.sin(nebulaTime * 0.00035) * 0.02 + 0.98;
@@ -181,7 +172,7 @@ function initCanvas() {
         // Main nebula glow from top-right
         const mainGradient = ctx.createRadialGradient(
             w + 100, -100, 0,
-            w * 0.5, vh * 0.3, w * 0.8
+            w * 0.5, h * 0.3, w * 0.8
         );
         mainGradient.addColorStop(0, 'rgba(180,60,40,' + (0.58 * pulse) + ')');
         mainGradient.addColorStop(0.2, 'rgba(200,80,50,' + (0.36 * pulse) + ')');
@@ -189,33 +180,33 @@ function initCanvas() {
         mainGradient.addColorStop(0.6, 'rgba(80,100,120,' + (0.13 * slowPulse) + ')');
         mainGradient.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = mainGradient;
-        ctx.fillRect(0, 0, w, vh);
+        ctx.fillRect(0, 0, w, h);
 
         // Secondary wisp with drift
         const wisp1 = ctx.createRadialGradient(
             w * 0.8 + Math.sin(nebulaTime * 0.001) * 30,
-            vh * 0.15 + Math.cos(nebulaTime * 0.0008) * 20,
+            h * 0.15 + Math.cos(nebulaTime * 0.0008) * 20,
             0,
-            w * 0.6, vh * 0.3, w * 0.5
+            w * 0.6, h * 0.3, w * 0.5
         );
         wisp1.addColorStop(0, 'rgba(220,120,60,' + (0.29 * pulse) + ')');
         wisp1.addColorStop(0.3, 'rgba(180,80,50,' + (0.2 * slowPulse) + ')');
         wisp1.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = wisp1;
-        ctx.fillRect(0, 0, w, vh);
+        ctx.fillRect(0, 0, w, h);
 
         // Teal filament accent
         const tealWisp = ctx.createRadialGradient(
             w * 0.7 + Math.cos(nebulaTime * 0.0009) * 40,
-            vh * 0.25 + Math.sin(nebulaTime * 0.0012) * 25,
+            h * 0.25 + Math.sin(nebulaTime * 0.0012) * 25,
             0,
-            w * 0.5, vh * 0.35, w * 0.3
+            w * 0.5, h * 0.35, w * 0.3
         );
         tealWisp.addColorStop(0, 'rgba(60,140,160,' + (0.2 * slowPulse) + ')');
         tealWisp.addColorStop(0.5, 'rgba(40,100,120,' + (0.12 * pulse) + ')');
         tealWisp.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = tealWisp;
-        ctx.fillRect(0, 0, w, vh);
+        ctx.fillRect(0, 0, w, h);
 
         // Nebula particles — drifting clouds of color
         for (let i = 0; i < nebulaParticles.length; i++) {
@@ -224,7 +215,7 @@ function initCanvas() {
             p.y += p.vy + Math.cos(nebulaTime * 0.002 + i) * 0.08;
             p.life++;
 
-            if (p.life > p.maxLife || p.x < -p.size || p.y > vh + p.size) {
+            if (p.life > p.maxLife || p.x < -p.size || p.y > h + p.size) {
                 nebulaParticles[i] = createNebulaParticle();
                 continue;
             }
@@ -247,24 +238,24 @@ function initCanvas() {
         // Subtle warmth variation
         const warmthCycle = Math.sin(nebulaTime * 0.0002) * 0.02;
         const warmthGradient = ctx.createRadialGradient(
-            w * 0.85, vh * 0.1, 0,
-            w * 0.6, vh * 0.3, w * 0.4
+            w * 0.85, h * 0.1, 0,
+            w * 0.6, h * 0.3, w * 0.4
         );
         warmthGradient.addColorStop(0, 'rgba(255,200,150,' + (0.03 + warmthCycle) + ')');
         warmthGradient.addColorStop(0.4, 'rgba(220,100,60,' + (0.015 + warmthCycle * 0.5) + ')');
         warmthGradient.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = warmthGradient;
-        ctx.fillRect(0, 0, w, vh);
+        ctx.fillRect(0, 0, w, h);
 
         nebulaTime += 16;
 
         return { pulse1: pulse, pulse2: slowPulse };
     };
 
-    // --- Constellation: nebula echoes + stars + connections ---
+    // --- Constellation: stars + connections (viewport only) ---
     const drawConstellation = (time) => {
         const w = window.innerWidth;
-        const h = contentHeight;
+        const h = window.innerHeight;
         const dpr = window.devicePixelRatio || 1;
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -274,23 +265,8 @@ function initCanvas() {
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, w, h);
 
-        // Nebula hero
-        const { pulse1, pulse2 } = drawNebula(time);
-
-        // Nebula echoes below the fold
-        const grad4 = ctx.createRadialGradient(w * 0.2, h * 0.35, 0, w * 0.2, h * 0.35, w * 0.4);
-        grad4.addColorStop(0, 'rgba(180,60,40,' + (0.03 * pulse1) + ')');
-        grad4.addColorStop(0.5, 'rgba(140,40,60,' + (0.01 * pulse2) + ')');
-        grad4.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad4;
-        ctx.fillRect(0, h * 0.2, w, h * 0.3);
-
-        const grad5 = ctx.createRadialGradient(w * 0.85, h * 0.65, 0, w * 0.85, h * 0.65, w * 0.35);
-        grad5.addColorStop(0, 'rgba(60,140,160,' + (0.025 * pulse2) + ')');
-        grad5.addColorStop(0.5, 'rgba(60,140,160,0.007)');
-        grad5.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad5;
-        ctx.fillRect(0, h * 0.5, w, h * 0.3);
+        // Nebula
+        drawNebula(time);
 
         // Constellation connection lines
         for (let i = 0; i < connections.length; i++) {
@@ -313,7 +289,7 @@ function initCanvas() {
             const twinkle = Math.sin(time * 0.001 * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
             const alpha = star.brightness * twinkle * 0.6;
 
-            // Node glow (simple circle, no per-frame gradient)
+            // Node glow
             if (star.isNode) {
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
@@ -335,10 +311,10 @@ function initCanvas() {
         }
     };
 
-    // --- DNA: helix + rungs + particles ---
+    // --- DNA: helix + rungs + particles (viewport only) ---
     const drawDNA = (time) => {
         const w = window.innerWidth;
-        const h = contentHeight;
+        const h = window.innerHeight;
         const dpr = window.devicePixelRatio || 1;
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -348,7 +324,7 @@ function initCanvas() {
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, w, h);
 
-        // Nebula hero
+        // Nebula
         drawNebula(time);
 
         // Helix parameters
@@ -472,7 +448,7 @@ function initCanvas() {
     // --- Draw dispatcher ---
     const drawFrame = mode === 'constellation' ? drawConstellation : drawDNA;
 
-    // --- Animation loop (30fps cap — ambient animation doesn't need 60) ---
+    // --- Animation loop (30fps cap) ---
     const animate = (time) => {
         if (time - lastFrame < 33) {
             animationId = requestAnimationFrame(animate);
@@ -503,18 +479,13 @@ function initCanvas() {
 
     // --- Resize handling ---
     let resizeTimeout;
-    const debouncedResize = () => {
+    window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             resize();
             if (prefersReducedMotion) drawFrame(1000);
         }, 150);
-    };
-
-    window.addEventListener('resize', debouncedResize);
-
-    const resizeObserver = new ResizeObserver(debouncedResize);
-    resizeObserver.observe(wrapper);
+    });
 }
 
 initCanvas();
