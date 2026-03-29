@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const thoughts = (await getCollection('thoughts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function getPreview(body: string, maxLength = 120): string {
+  const text = body.replace(/^---[\s\S]*?---\s*/, '').replace(/[#*_`>\[\]]/g, '').trim();
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).replace(/\s+\S*$/, '') + '…';
+}
+---
+
+<BaseLayout title="Thoughts — Kevin Smith" description="Short-form observations on building software, running a business, and shipping products.">
+  <div class="max-w-2xl mx-auto px-6 pt-28 pb-16">
+    <h1 class="text-3xl font-bold text-slate-100 mb-2">Thoughts</h1>
+    <p class="text-slate-400 mb-10">Observations, opinions, and things I can't stop thinking about.</p>
+
+    <div class="space-y-8">
+      {thoughts.map((thought) => (
+        <article>
+          <a href={`/thoughts/${thought.id.replace(/\.md$/, '')}`} class="group block">
+            <time datetime={thought.data.date.toISOString().split('T')[0]} class="text-sm text-slate-500">
+              {formatDate(thought.data.date)}
+            </time>
+            <h2 class="text-xl font-semibold text-slate-100 group-hover:text-teal-400 transition-colors mt-1">
+              {thought.data.title}
+            </h2>
+            <p class="text-slate-400 mt-2 leading-relaxed">
+              {getPreview(thought.body)}
+            </p>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

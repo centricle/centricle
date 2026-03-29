@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const thoughts = await getCollection('thoughts');
+  return thoughts.map((thought) => ({
+    params: { slug: thought.id.replace(/\.md$/, '') },
+    props: { thought },
+  }));
+}
+
+const { thought } = Astro.props;
+const { Content } = await render(thought);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+---
+
+<BaseLayout title={`${thought.data.title} — Kevin Smith`} description={thought.body.replace(/^---[\s\S]*?---\s*/, '').replace(/[#*_`>\[\]]/g, '').trim().slice(0, 160)}>
+  <article class="max-w-2xl mx-auto px-6 pt-28 pb-16">
+    <a href="/thoughts/" class="text-sm text-slate-500 hover:text-teal-400 transition-colors">&larr; All thoughts</a>
+    <header class="mt-4 mb-8">
+      <h1 class="text-3xl font-bold text-slate-100">{thought.data.title}</h1>
+      <time datetime={thought.data.date.toISOString().split('T')[0]} class="text-sm text-slate-500 mt-2 block">
+        {formatDate(thought.data.date)}
+      </time>
+    </header>
+    <div class="thought-body text-slate-300 leading-relaxed">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .thought-body p {
+    margin-bottom: 1.25em;
+  }
+  .thought-body p:last-child {
+    margin-bottom: 0;
+  }
+  .thought-body a {
+    color: #2dd4bf;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .thought-body a:hover {
+    color: #f1f5f9;
+  }
+  .thought-body blockquote {
+    border-left: 2px solid #14b8a6;
+    padding-left: 1rem;
+    color: #94a3b8;
+    margin: 1.5em 0;
+  }
+  .thought-body strong {
+    color: #f1f5f9;
+    font-weight: 600;
+  }
+</style>
